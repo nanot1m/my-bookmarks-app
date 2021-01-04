@@ -62,7 +62,7 @@ function upgradeState(state: AppState): AppState {
   while (state.version !== APP_VERSION) {
     const version = Number(state.version ?? 0);
     if (version in UPGRADES) {
-      state = UPGRADES[Number(state.version ?? 0)](state);
+      state = UPGRADES[version](state);
     } else {
       state = getInitialState(APP_VERSION);
     }
