@@ -12,7 +12,7 @@ export interface AppState {
   bookmarks: BookmarkType[];
 }
 
-export function getInitialState(version: number): AppState {
+export function getInitialState(version: number = APP_VERSION): AppState {
   return {
     version,
     bookmarks: [],
@@ -41,7 +41,9 @@ export function createStorageManager(
         return getInitialState(APP_VERSION);
       }
     },
-    setState() {},
+    setState(state) {
+      storageProvider.setState(state);
+    },
   };
 }
 
