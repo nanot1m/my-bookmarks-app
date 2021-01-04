@@ -136,7 +136,6 @@ export function CreateBookmarkButton({
   return (
     <>
       <IconButton
-        size="xs"
         aria-label="New bookmakr"
         icon={<AddIcon />}
         onClick={onOpen}
@@ -164,7 +163,6 @@ export function EditBookmarkButton({
   return (
     <>
       <IconButton
-        size="xs"
         aria-label="New bookmakr"
         icon={<EditIcon />}
         onClick={onOpen}

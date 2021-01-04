@@ -49,7 +49,6 @@ export function BookmarkView({
             onBookmarkUpdate={onBookmarkUpdate}
           />
           <IconButton
-            size="xs"
             aria-label="Delete bookmark"
             icon={<DeleteIcon />}
             onClick={() => onBookmarkDelete(bookmark.id)}
