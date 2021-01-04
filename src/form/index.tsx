@@ -45,6 +45,7 @@ export function createForm<T>() {
       <FinalForm<T>
         initialValues={props.initialValues}
         onSubmit={props.onSubmit}
+        validate={props.validate}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>{props.children}</form>
         )}
@@ -66,6 +67,7 @@ export function createForm<T>() {
             isInvalid={meta.touched && meta.error}
           >
             <FormLabel>{props.label}</FormLabel>
+            {console.log({ meta, input })}
             {props.render(input)}
             <FormErrorMessage>
               <FormErrorIcon /> {meta.error}

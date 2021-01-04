@@ -12,7 +12,7 @@ import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { BookmarkType } from "./bookmark";
 import { AppState } from "./storage";
 import { BookmarkView } from "./BookmarkView";
-import { CreateBookmarkPopover } from "./CreateBookmarkPopover";
+import { CreateBookmark } from "./CreateBookmark";
 
 const customTheme = extendTheme({
   config: {
@@ -68,7 +68,7 @@ function App({
           mb={12}
         >
           <Heading as="h1">My bookmarks.</Heading>
-          <CreateBookmarkPopover
+          <CreateBookmark
             onNewBookmark={(bookmark) => {
               dispatch({ type: "NewBookmark", payload: bookmark });
             }}
