@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/my-bookmarks-app/static/js/main.c1a43c20.chunk.js",
-    "main.js.map": "/my-bookmarks-app/static/js/main.c1a43c20.chunk.js.map",
-    "runtime-main.js": "/my-bookmarks-app/static/js/runtime-main.25ba56d7.js",
-    "runtime-main.js.map": "/my-bookmarks-app/static/js/runtime-main.25ba56d7.js.map",
-    "static/js/2.7ca43acb.chunk.js": "/my-bookmarks-app/static/js/2.7ca43acb.chunk.js",
-    "static/js/2.7ca43acb.chunk.js.map": "/my-bookmarks-app/static/js/2.7ca43acb.chunk.js.map",
-    "static/js/3.082e7368.chunk.js": "/my-bookmarks-app/static/js/3.082e7368.chunk.js",
-    "static/js/3.082e7368.chunk.js.map": "/my-bookmarks-app/static/js/3.082e7368.chunk.js.map",
+    "main.js": "/my-bookmarks-app/static/js/main.0449c845.chunk.js",
+    "main.js.map": "/my-bookmarks-app/static/js/main.0449c845.chunk.js.map",
+    "runtime-main.js": "/my-bookmarks-app/static/js/runtime-main.ef0b60dd.js",
+    "runtime-main.js.map": "/my-bookmarks-app/static/js/runtime-main.ef0b60dd.js.map",
+    "static/js/2.d5f4a2e4.chunk.js": "/my-bookmarks-app/static/js/2.d5f4a2e4.chunk.js",
+    "static/js/2.d5f4a2e4.chunk.js.map": "/my-bookmarks-app/static/js/2.d5f4a2e4.chunk.js.map",
+    "static/js/3.e310bdc0.chunk.js": "/my-bookmarks-app/static/js/3.e310bdc0.chunk.js",
+    "static/js/3.e310bdc0.chunk.js.map": "/my-bookmarks-app/static/js/3.e310bdc0.chunk.js.map",
     "index.html": "/my-bookmarks-app/index.html",
-    "static/js/2.7ca43acb.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/2.7ca43acb.chunk.js.LICENSE.txt"
+    "static/js/2.d5f4a2e4.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/2.d5f4a2e4.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.25ba56d7.js",
-    "static/js/2.7ca43acb.chunk.js",
-    "static/js/main.c1a43c20.chunk.js"
+    "static/js/runtime-main.ef0b60dd.js",
+    "static/js/2.d5f4a2e4.chunk.js",
+    "static/js/main.0449c845.chunk.js"
   ]
 }
