@@ -6,7 +6,7 @@ function getBookmarkId() {
   return nanoid() as BookmarkId;
 }
 
-export type Bookmark = {
+export type BookmarkType = {
   id: BookmarkId;
   name: string;
   url: string;
@@ -26,7 +26,7 @@ export function createBookmark({
   url,
   description = "",
   tags = [],
-}: CreateBookmarkPayload): Bookmark {
+}: CreateBookmarkPayload): BookmarkType {
   return {
     id: getBookmarkId(),
     url,
