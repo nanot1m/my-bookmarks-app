@@ -67,7 +67,6 @@ export function createForm<T>() {
             isInvalid={meta.touched && meta.error}
           >
             <FormLabel>{props.label}</FormLabel>
-            {console.log({ meta, input })}
             {props.render(input)}
             <FormErrorMessage>
               <FormErrorIcon /> {meta.error}

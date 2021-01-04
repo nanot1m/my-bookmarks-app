@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { matchSorter } from "match-sorter";
 import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { BookmarkType } from "./bookmark";
+import { BookmarkId, BookmarkType } from "./bookmark";
 import { AppState } from "./storage";
 import { BookmarkView } from "./BookmarkView";
-import { CreateBookmark } from "./CreateBookmark";
+import { CreateBookmarkButton } from "./BookmarkForm";
 
 const customTheme = extendTheme({
   config: {
@@ -20,7 +20,10 @@ const customTheme = extendTheme({
   },
 });
 
-type AppAction = { type: "NewBookmark"; payload: BookmarkType };
+type AppAction =
+  | { type: "NewBookmark"; payload: BookmarkType }
+  | { type: "UpdateBookmark"; payload: BookmarkType }
+  | { type: "DeleteBookmark"; payload: BookmarkId };
 
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
@@ -28,6 +31,25 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         bookmarks: state.bookmarks.concat(action.payload),
+      };
+    case "UpdateBookmark": {
+      const updatedBookmarkIndex = state.bookmarks.findIndex(
+        (b) => b.id === action.payload.id
+      );
+      const updatedBookmarks: BookmarkType[] = [
+        ...state.bookmarks.slice(0, updatedBookmarkIndex),
+        action.payload,
+        ...state.bookmarks.slice(updatedBookmarkIndex + 1),
+      ];
+      return {
+        ...state,
+        bookmarks: updatedBookmarks,
+      };
+    }
+    case "DeleteBookmark":
+      return {
+        ...state,
+        bookmarks: state.bookmarks.filter((b) => b.id !== action.payload),
       };
   }
 }
@@ -52,9 +74,11 @@ function App({
   const { bookmarks } = state;
   const sorted = useMemo(
     () =>
-      matchSorter(bookmarks, filter, {
-        keys: ["name", "tags", "description"],
-      }),
+      matchSorter(
+        bookmarks.slice().sort((a, b) => (a.updatedAt < b.updatedAt ? -1 : 1)),
+        filter,
+        { keys: ["name", "tags", "description"] }
+      ),
     [filter, bookmarks]
   );
 
@@ -68,8 +92,8 @@ function App({
           mb={12}
         >
           <Heading as="h1">My bookmarks.</Heading>
-          <CreateBookmark
-            onNewBookmark={(bookmark) => {
+          <CreateBookmarkButton
+            onBookmarkCreate={(bookmark) => {
               dispatch({ type: "NewBookmark", payload: bookmark });
             }}
           />
@@ -82,7 +106,16 @@ function App({
         />
         <VStack spacing={4} align="stretch">
           {sorted.map((bookmark) => (
-            <BookmarkView key={bookmark.id} bookmark={bookmark} />
+            <BookmarkView
+              key={bookmark.id}
+              bookmark={bookmark}
+              onBookmarkUpdate={(bookmark) =>
+                dispatch({ type: "UpdateBookmark", payload: bookmark })
+              }
+              onBookmarkDelete={(id) =>
+                dispatch({ type: "DeleteBookmark", payload: id })
+              }
+            />
           ))}
         </VStack>
       </Container>

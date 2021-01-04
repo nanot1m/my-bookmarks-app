@@ -5,12 +5,15 @@ import reportWebVitals from "./reportWebVitals";
 import { ColorModeScript } from "@chakra-ui/react";
 import { localStorageProvider } from "./storage/local-storage";
 import { createBookmark } from "./bookmark";
+import { APP_VERSION, createStorageManager, getInitialState } from "./storage";
 
-localStorageProvider.getState().then((state) => {
+const storageManager = createStorageManager(localStorageProvider);
+
+storageManager.getState().then((state) => {
   ReactDOM.render(
     <StrictMode>
       <ColorModeScript />
-      <App initialState={state} onStateChange={localStorageProvider.setState} />
+      <App initialState={state} onStateChange={storageManager.setState} />
     </StrictMode>,
     document.getElementById("root")
   );
@@ -43,7 +46,10 @@ window.setTestBookmarks = function () {
     }),
   ];
 
-  localStorageProvider.setState({ bookmarks: myBookmarks });
+  localStorageProvider.setState({
+    ...getInitialState(APP_VERSION),
+    bookmarks: myBookmarks,
+  });
   window.location.reload();
 };
 
