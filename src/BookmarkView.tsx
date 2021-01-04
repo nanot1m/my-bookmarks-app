@@ -1,13 +1,21 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Flex,
   Heading,
   HStack,
   IconButton,
   Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Tag,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
@@ -25,6 +33,7 @@ export function BookmarkView({
   >["onBookmarkUpdate"];
   onBookmarkDelete: (id: BookmarkId) => void;
 }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box border="1px" borderColor="gray.200" borderRadius={8} px={4} py={2}>
       <Flex justify="space-between">
@@ -51,10 +60,33 @@ export function BookmarkView({
           <IconButton
             aria-label="Delete bookmark"
             icon={<DeleteIcon />}
-            onClick={() => onBookmarkDelete(bookmark.id)}
+            onClick={onOpen}
           />
         </VStack>
       </Flex>
+      <Modal onClose={onClose} isOpen={isOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Are you sure?</ModalHeader>
+          <ModalBody>
+            Deleting bookmark: <strong>{bookmark.name}</strong>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose} mr={3}>
+              Cancel
+            </Button>
+            <Button
+              colorScheme="red"
+              onClick={() => {
+                onBookmarkDelete(bookmark.id);
+                onClose();
+              }}
+            >
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
