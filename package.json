@@ -2,6 +2,7 @@
   "name": "my-notes-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://nanot1m.github.io/my-bookmarks-app",
   "dependencies": {
     "@chakra-ui/icons": "^1.0.2",
     "@chakra-ui/react": "^1.1.1",
