@@ -106,7 +106,7 @@ export function BookmarkForm({
               />
               <Field
                 name="tags"
-                label="Description"
+                label="Tags"
                 id="bookmark-tags"
                 render={(input) => <Textarea {...input} />}
               />
