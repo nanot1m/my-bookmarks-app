@@ -1,3 +1,4 @@
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import {
   Box,
   Container,
@@ -11,13 +12,13 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/icons";
 import { FaFileAlt, FaFileDownload } from "react-icons/fa";
+import { FileSystemHandle } from "browser-nativefs";
 import { matchSorter } from "match-sorter";
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+
 import { BookmarkId, BookmarkType } from "./bookmark";
 import { AppState } from "./storage";
 import { BookmarkView } from "./BookmarkView";
 import { CreateBookmarkButton } from "./BookmarkForm";
-import { FileSystemHandle } from "browser-nativefs";
 import { loadFromFile, saveToFile } from "./storage/file-system-storage";
 
 type AppAction =
@@ -66,7 +67,6 @@ function App({
 }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [filter, setFilterValue] = useState("");
-  const [fileName, setFileName] = useState<string>();
   const [fileHandle, setFileHandle] = useState<FileSystemHandle>();
   const toast = useToast();
 
@@ -88,6 +88,46 @@ function App({
     [filter, bookmarks]
   );
 
+  async function handleFileOpen() {
+    try {
+      const file = await loadFromFile();
+      setFileHandle(file.handle);
+      dispatch({ type: "SetState", payload: file.state });
+    } catch (ex) {
+      if (ex.code !== DOMException.ABORT_ERR) {
+        toast({
+          title: "Error",
+          description: ex.message,
+          status: "error",
+          isClosable: true,
+        });
+      }
+    }
+  }
+
+  async function handleFileSave() {
+    try {
+      const result = await saveToFile(state, fileHandle?.name, fileHandle);
+      setFileHandle(result.fileHandle);
+      toast({
+        title: "Saved",
+        description: "Bookmarks saved to " + result.fileHandle.name,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (ex) {
+      if (ex.code !== DOMException.ABORT_ERR) {
+        toast({
+          title: "Error",
+          description: ex.message,
+          status: "error",
+          isClosable: true,
+        });
+      }
+    }
+  }
+
   return (
     <Container py={8}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -97,41 +137,13 @@ function App({
             aria-label="Open file"
             title="Open file"
             icon={<Icon as={FaFileAlt} />}
-            onClick={() =>
-              loadFromFile().then((file) => {
-                setFileName(file.name);
-                setFileHandle(file.handle);
-                dispatch({ type: "SetState", payload: file.state });
-              })
-            }
+            onClick={handleFileOpen}
           />
           <IconButton
             aria-label="Save to file"
             title="Save to file"
             icon={<Icon as={FaFileDownload} />}
-            onClick={() =>
-              saveToFile(state, fileName, fileHandle).then(
-                ({ fileHandle }) => {
-                  setFileName(fileHandle.name);
-                  setFileHandle(fileHandle);
-                  toast({
-                    title: "Saved",
-                    description: "Bookmarks saved to " + fileHandle.name,
-                    status: "success",
-                    duration: 2000,
-                    isClosable: true,
-                  });
-                },
-                (ex) => {
-                  toast({
-                    title: "Error",
-                    description: ex.message,
-                    status: "error",
-                    isClosable: true,
-                  });
-                }
-              )
-            }
+            onClick={handleFileSave}
           />
           <CreateBookmarkButton
             onBookmarkCreate={(bookmark) => {
@@ -141,7 +153,7 @@ function App({
         </HStack>
       </Box>
       <Box mb={10}>
-        <Text color="gray.500">{fileName}</Text>
+        <Text color="gray.500">{fileHandle?.name}</Text>
       </Box>
       <Input
         placeholder="Search"
