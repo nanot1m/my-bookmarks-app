@@ -9,9 +9,11 @@ import {
   Text,
   VStack,
   useToast,
+  Link,
 } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/icons";
 import { FaFileAlt, FaFileDownload } from "react-icons/fa";
+import { GoMarkGithub } from "react-icons/go";
 import { FileSystemHandle } from "browser-nativefs";
 import { matchSorter } from "match-sorter";
 
@@ -130,7 +132,12 @@ function App({
 
   return (
     <Container py={8}>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        as="header"
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <Heading as="h1">My bookmarks.</Heading>
         <HStack>
           <IconButton
@@ -161,6 +168,11 @@ function App({
         onChange={(e) => setFilterValue(e.target.value)}
         mb={8}
       />
+      {sorted.length === 0 && (
+        <Box textAlign="center" color="gray.500">
+          No bookmarks yet. Let's add the first bookmark!
+        </Box>
+      )}
       <VStack spacing={4} align="stretch">
         {sorted.map((bookmark) => (
           <BookmarkView
@@ -175,6 +187,15 @@ function App({
           />
         ))}
       </VStack>
+      <Box as="footer" mt={10} display="flex" justifyContent="flex-end">
+        <Link
+          href="https://github.com/nanot1m/my-bookmarks-app"
+          isExternal
+          color="gray.500"
+        >
+          <Icon as={GoMarkGithub} /> nanot1m
+        </Link>
+      </Box>
     </Container>
   );
 }
