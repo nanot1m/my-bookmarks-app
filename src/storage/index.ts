@@ -60,7 +60,7 @@ const UPGRADES: Record<number, StateUpdate> = {
   },
 };
 
-function upgradeState(state: AppState): AppState {
+export function upgradeState(state: AppState): AppState {
   while (state.version !== APP_VERSION) {
     const version = Number(state.version ?? 0);
     if (version in UPGRADES) {

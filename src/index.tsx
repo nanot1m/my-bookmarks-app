@@ -1,8 +1,8 @@
-import { StrictMode } from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ColorModeScript } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { localStorageProvider } from "./storage/local-storage";
 import { createBookmark } from "./bookmark";
 import { APP_VERSION, createStorageManager, getInitialState } from "./storage";
@@ -10,10 +10,18 @@ import { APP_VERSION, createStorageManager, getInitialState } from "./storage";
 const storageManager = createStorageManager(localStorageProvider);
 
 storageManager.getState().then((state) => {
+  const customTheme = extendTheme({
+    config: {
+      useSystemColorMode: true,
+    },
+  });
+
   ReactDOM.render(
     <StrictMode>
       <ColorModeScript />
-      <App initialState={state} onStateChange={storageManager.setState} />
+      <ChakraProvider theme={customTheme}>
+        <App initialState={state} onStateChange={storageManager.setState} />
+      </ChakraProvider>
     </StrictMode>,
     document.getElementById("root")
   );
