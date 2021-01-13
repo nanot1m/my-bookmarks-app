@@ -1,15 +1,17 @@
 import React, { useEffect, useMemo, useReducer, useState } from "react";
 import {
   Box,
+  Checkbox,
+  Collapse,
   Container,
   Heading,
   HStack,
   IconButton,
   Input,
-  Text,
-  VStack,
-  useToast,
   Link,
+  Text,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/icons";
 import { FaFileAlt, FaFileDownload } from "react-icons/fa";
@@ -70,6 +72,8 @@ function App({
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [filter, setFilterValue] = useState("");
   const [fileHandle, setFileHandle] = useState<FileSystemHandle>();
+  const [autoSaveIsEnabled, setAutoSaveEnabled] = useState(false);
+
   const toast = useToast();
 
   useEffect(() => {
@@ -79,8 +83,23 @@ function App({
     return () => clearTimeout(id);
   }, [onStateChange, state]);
 
+  useEffect(() => {
+    if (autoSaveIsEnabled) {
+      saveToFile(state, fileHandle?.name, fileHandle).catch((ex) => {
+        if (ex.code !== DOMException.ABORT_ERR) {
+          toast({
+            title: "Error",
+            description: ex.message,
+            status: "error",
+            isClosable: true,
+          });
+        }
+      });
+    }
+  }, [autoSaveIsEnabled, fileHandle, state, toast]);
+
   const { bookmarks } = state;
-  const sorted = useMemo(
+  const sortedBookmarks = useMemo(
     () =>
       matchSorter(
         bookmarks.slice().sort((a, b) => (a.updatedAt < b.updatedAt ? -1 : 1)),
@@ -137,6 +156,7 @@ function App({
         display="flex"
         justifyContent="space-between"
         alignItems="center"
+        mb={2}
       >
         <Heading as="h1">My bookmarks.</Heading>
         <HStack>
@@ -159,22 +179,33 @@ function App({
           />
         </HStack>
       </Box>
-      <Box mb={10}>
-        <Text color="gray.500">{fileHandle?.name}</Text>
-      </Box>
+      <Collapse in={Boolean(fileHandle)} animateOpacity>
+        {fileHandle && (
+          <Box display="flex" justifyContent="space-between" pb={2}>
+            <Text>{fileHandle.name}</Text>
+            <Checkbox
+              checked={autoSaveIsEnabled}
+              onChange={(e) => setAutoSaveEnabled(e.target.checked)}
+            >
+              Autosave
+            </Checkbox>
+          </Box>
+        )}
+      </Collapse>
       <Input
         placeholder="Search"
         value={filter}
         onChange={(e) => setFilterValue(e.target.value)}
         mb={8}
+        mt={8}
       />
-      {sorted.length === 0 && (
+      {sortedBookmarks.length === 0 && (
         <Box textAlign="center" color="gray.500">
           No bookmarks yet. Let's add the first bookmark!
         </Box>
       )}
       <VStack spacing={4} align="stretch">
-        {sorted.map((bookmark) => (
+        {sortedBookmarks.map((bookmark) => (
           <BookmarkView
             key={bookmark.id}
             bookmark={bookmark}

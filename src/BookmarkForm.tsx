@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import React, { useRef } from "react";
-import { BookmarkType, createBookmark } from "./bookmark";
+import { BookmarkType, createBookmark, updateBookmark } from "./bookmark";
 import { createForm } from "./form";
 
 type CreateBookmarkFormPayload = {
@@ -27,9 +27,7 @@ type CreateBookmarkFormPayload = {
 
 const { Form, Field } = createForm<CreateBookmarkFormPayload>();
 
-const validateNewBookmarkForm = (
-  form: CreateBookmarkFormPayload
-): Partial<Record<"name" | "url" | "description" | "tags", string>> => {
+function validateNewBookmarkForm(form: CreateBookmarkFormPayload) {
   const errors = {} as Partial<Record<keyof typeof form, string>>;
   if ((form.name?.trim() || "").length === 0) {
     errors.name = "Name can not be empty";
@@ -38,7 +36,7 @@ const validateNewBookmarkForm = (
     errors.url = "URL can not be empty";
   }
   return errors;
-};
+}
 
 export function BookmarkForm({
   title,
@@ -55,28 +53,30 @@ export function BookmarkForm({
 }) {
   const initialFocusRef = useRef<HTMLInputElement>(null);
 
+  function handleSubmit(values: CreateBookmarkFormPayload): void {
+    const vals = {
+      name: values.name,
+      description: values.description,
+      url: values.url,
+      tags: values.tags.split(/[\s,]+/).filter(Boolean),
+    };
+    onSubmit(bookmark ? updateBookmark(bookmark, vals) : createBookmark(vals));
+    onClose();
+  }
+
+  const initialValues = {
+    description: bookmark?.description ?? "",
+    name: bookmark?.name ?? "",
+    tags: bookmark?.tags.join(", ") ?? "",
+    url: bookmark?.url ?? "",
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <Form
-        onSubmit={(values) => {
-          const payload = {
-            name: values.name,
-            description: values.description,
-            url: values.url,
-            tags: values.tags.split(/[\s,]+/).filter(Boolean),
-          };
-          onSubmit(
-            bookmark ? { ...bookmark, ...payload } : createBookmark(payload)
-          );
-          onClose();
-        }}
-        initialValues={{
-          description: bookmark?.description ?? "",
-          name: bookmark?.name ?? "",
-          tags: bookmark?.tags.join(", ") ?? "",
-          url: bookmark?.url ?? "",
-        }}
+        onSubmit={handleSubmit}
+        initialValues={initialValues}
         validate={validateNewBookmarkForm}
       >
         <ModalContent>
@@ -140,7 +140,6 @@ export function CreateBookmarkButton({
         icon={<AddIcon />}
         onClick={onOpen}
       />
-
       <BookmarkForm
         title="New bookmark"
         onClose={onClose}
