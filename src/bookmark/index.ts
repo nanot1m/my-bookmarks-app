@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+
 import { map, toArray, unique } from "../collection";
 
 export type BookmarkId = string & { __type__: "BookmarkId" };

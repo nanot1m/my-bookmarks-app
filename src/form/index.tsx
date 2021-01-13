@@ -1,11 +1,11 @@
-import { Form as FinalForm, Field as FinalField } from "react-final-form";
-import React, { ReactNode } from "react";
 import {
   FormControl,
   FormErrorIcon,
   FormErrorMessage,
   FormLabel,
 } from "@chakra-ui/react";
+import React, { ReactNode } from "react";
+import { Field as FinalField, Form as FinalForm } from "react-final-form";
 
 export interface FormProps<T> {
   initialValues: T;

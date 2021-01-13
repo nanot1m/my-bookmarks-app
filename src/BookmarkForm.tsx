@@ -1,3 +1,4 @@
+import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
   IconButton,
@@ -13,8 +14,8 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import React, { useRef } from "react";
+
 import { BookmarkType, createBookmark, updateBookmark } from "./bookmark";
 import { createForm } from "./form";
 

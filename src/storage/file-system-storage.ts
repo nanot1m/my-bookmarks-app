@@ -1,4 +1,5 @@
-import { fileSave, fileOpen, FileSystemHandle } from "browser-nativefs";
+import { fileOpen, fileSave, FileSystemHandle } from "browser-nativefs";
+
 import { AppState, upgradeState } from "./index";
 
 export async function saveToFile(

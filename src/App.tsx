@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import { Icon } from "@chakra-ui/icons";
 import {
   Box,
   Checkbox,
@@ -13,16 +13,16 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { Icon } from "@chakra-ui/icons";
-import { FaFileAlt, FaFileDownload } from "react-icons/fa";
-import { GoMarkGithub } from "react-icons/go";
 import { FileSystemHandle } from "browser-nativefs";
 import { matchSorter } from "match-sorter";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
+import { FaFileAlt, FaFileDownload } from "react-icons/fa";
+import { GoMarkGithub } from "react-icons/go";
 
 import { BookmarkId, BookmarkType } from "./bookmark";
-import { AppState } from "./storage";
-import { BookmarkView } from "./BookmarkView";
 import { CreateBookmarkButton } from "./BookmarkForm";
+import { BookmarkView } from "./BookmarkView";
+import { AppState } from "./storage";
 import { loadFromFile, saveToFile } from "./storage/file-system-storage";
 
 type AppAction =

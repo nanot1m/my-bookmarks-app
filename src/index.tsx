@@ -1,11 +1,12 @@
+import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom";
+
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
-import { localStorageProvider } from "./storage/local-storage";
 import { createBookmark } from "./bookmark";
+import reportWebVitals from "./reportWebVitals";
 import { APP_VERSION, createStorageManager, getInitialState } from "./storage";
+import { localStorageProvider } from "./storage/local-storage";
 
 const storageManager = createStorageManager(localStorageProvider);
 
