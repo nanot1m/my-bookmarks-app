@@ -14,7 +14,7 @@ export interface FormProps<T> {
   children: ReactNode;
 }
 
-type FilterStrings<T> = T extends string ? T : never;
+type FilterStrings<UnionType> = UnionType extends string ? UnionType : never;
 
 export interface FieldProps<
   TValues,
@@ -28,21 +28,21 @@ export interface FieldProps<
   render(input: FieldInputProps<TValues[TName], TElement>): ReactNode;
 }
 
-interface FieldInputProps<FieldValue, T extends HTMLElement> {
+interface FieldInputProps<FieldValue, ElementType extends HTMLElement> {
   name: string;
-  onBlur: (event?: React.FocusEvent<T>) => void;
-  onChange: (event: React.ChangeEvent<T> | any) => void;
-  onFocus: (event?: React.FocusEvent<T>) => void;
+  onBlur: (event?: React.FocusEvent<ElementType>) => void;
+  onChange: (event: React.ChangeEvent<ElementType> | any) => void;
+  onFocus: (event?: React.FocusEvent<ElementType>) => void;
   type?: string;
   value: FieldValue;
   checked?: boolean;
   multiple?: boolean;
 }
 
-export function createForm<T>() {
-  function Form(props: FormProps<T>) {
+export function createForm<FormValuesType>() {
+  function Form(props: FormProps<FormValuesType>) {
     return (
-      <FinalForm<T>
+      <FinalForm<FormValuesType>
         initialValues={props.initialValues}
         onSubmit={props.onSubmit}
         validate={props.validate}
@@ -54,11 +54,11 @@ export function createForm<T>() {
   }
 
   function Field<
-    TName extends FilterStrings<keyof T>,
+    TName extends FilterStrings<keyof FormValuesType>,
     TElement extends HTMLElement = HTMLElement
-  >(props: FieldProps<T, TName, TElement>) {
+  >(props: FieldProps<FormValuesType, TName, TElement>) {
     return (
-      <FinalField<T[typeof props["name"]]>
+      <FinalField<FormValuesType[typeof props["name"]]>
         name={props.name}
         render={({ input, meta }) => (
           <FormControl
