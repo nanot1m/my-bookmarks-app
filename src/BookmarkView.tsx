@@ -6,6 +6,7 @@ import {
   Heading,
   HStack,
   IconButton,
+  Image as ChakraImage,
   Link,
   Modal,
   ModalBody,
@@ -18,10 +19,52 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { BookmarkId, BookmarkType } from "./bookmark";
 import { EditBookmarkButton } from "./BookmarkForm";
+
+function getFaviconUrl(uri: string) {
+  const url = new URL(uri);
+  return `${url.origin}/favicon.ico`;
+}
+
+function Favicon({ url }: { url: string }) {
+  const [ready, setReady] = useState(false);
+  const image = useRef(new Image());
+
+  useEffect(() => {
+    let cancelled = false;
+    image.current.src = url;
+    image.current.onload = () => {
+      if (!cancelled) setReady(true);
+    };
+    return () => {
+      setReady(false);
+      cancelled = true;
+    };
+  }, [url]);
+
+  return (
+    <Box
+      background="gray.50"
+      width="24px"
+      height="24px"
+      rounded="full"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <ChakraImage
+        boxSize="16px"
+        src={url}
+        alt="Favicon"
+        transition="opacity 0.2s ease-in"
+        opacity={Number(ready)}
+      />
+    </Box>
+  );
+}
 
 export function BookmarkView({
   bookmark,
@@ -40,8 +83,9 @@ export function BookmarkView({
       <Flex justify="space-between">
         <Box>
           <Link isExternal href={bookmark.url}>
-            <Heading as="h3" size="m">
-              {bookmark.name}
+            <Heading as="h3" size="m" display="flex" alignItems="center">
+              <Favicon url={getFaviconUrl(bookmark.url)} />
+              <Box ml={2}>{bookmark.name}</Box>
             </Heading>
           </Link>
           <Text mb={1}>{bookmark.description}</Text>
