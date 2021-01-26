@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   Heading,
-  HStack,
   IconButton,
   Image as ChakraImage,
   Link,
@@ -18,15 +17,24 @@ import {
   Text,
   useDisclosure,
   VStack,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { BookmarkId, BookmarkType } from "./bookmark";
 import { EditBookmarkButton } from "./BookmarkForm";
 
-function getFaviconUrl(uri: string) {
-  const url = new URL(uri);
-  return `${url.origin}/favicon.ico`;
+function useFaviconUrl(uri: string) {
+  return useMemo(() => {
+    try {
+      const url = new URL(uri);
+      return `${url.origin}/favicon.ico`;
+    } catch (ex) {
+      console.log({ ...ex });
+      return null;
+    }
+  }, [uri]);
 }
 
 function Favicon({ url }: { url: string }) {
@@ -78,24 +86,26 @@ export function BookmarkView({
   onBookmarkDelete: (id: BookmarkId) => void;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const faviconUrl = useFaviconUrl(bookmark.url);
+
   return (
     <Box border="1px" borderColor="gray.200" borderRadius={8} px={4} py={2}>
       <Flex justify="space-between">
         <Box>
           <Link isExternal href={bookmark.url}>
             <Heading as="h3" size="m" display="flex" alignItems="center">
-              <Favicon url={getFaviconUrl(bookmark.url)} />
-              <Box ml={2}>{bookmark.name}</Box>
+              {faviconUrl && <Favicon url={faviconUrl} />}
+              <Box ml={faviconUrl ? 2 : 0}>{bookmark.name}</Box>
             </Heading>
           </Link>
           <Text mb={1}>{bookmark.description}</Text>
-          <HStack>
+          <Wrap spacing={2}>
             {bookmark.tags.map((tag) => (
-              <Tag key={tag} size="sm">
-                {tag}
-              </Tag>
+              <WrapItem key={tag}>
+                <Tag size="sm">{tag}</Tag>
+              </WrapItem>
             ))}
-          </HStack>
+          </Wrap>
         </Box>
         <VStack>
           <EditBookmarkButton
