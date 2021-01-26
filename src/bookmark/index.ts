@@ -24,6 +24,18 @@ export type CreateBookmarkPayload = {
   tags?: string[];
 };
 
+function processUrl(url: string) {
+  const split = url.split("//");
+  if (split.length === 1) {
+    return `https://${url}`;
+  }
+  return url;
+}
+
+function processTags(tags: string[]): string[] {
+  return toArray(unique(map((x) => x.toLowerCase(), tags)));
+}
+
 export function createBookmark({
   name,
   url,
@@ -33,10 +45,10 @@ export function createBookmark({
   const date = new Date().toISOString();
   return {
     id: getBookmarkId(),
-    url,
+    url: processUrl(url),
     name,
     description,
-    tags: toArray(unique(map((x) => x.toLowerCase(), tags))),
+    tags: processTags(tags),
     createdAt: date,
     updatedAt: date,
   };
@@ -45,10 +57,12 @@ export function createBookmark({
 export function updateBookmark(
   bookmark: BookmarkType,
   updates: Omit<Partial<BookmarkType>, "id" | "createdAt" | "updatedAt">
-) {
+): BookmarkType {
   return {
     ...bookmark,
     ...updates,
+    url: processUrl(updates.url ?? bookmark.url),
+    tags: processTags(updates.tags ?? bookmark.tags),
     updatedAt: new Date().toISOString(),
   };
 }

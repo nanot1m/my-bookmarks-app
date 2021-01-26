@@ -31,7 +31,6 @@ function useFaviconUrl(uri: string) {
       const url = new URL(uri);
       return `${url.origin}/favicon.ico`;
     } catch (ex) {
-      console.log({ ...ex });
       return null;
     }
   }, [uri]);
