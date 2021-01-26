@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/my-bookmarks-app/static/js/main.6f5cfc1d.chunk.js",
-    "main.js.map": "/my-bookmarks-app/static/js/main.6f5cfc1d.chunk.js.map",
+    "main.js": "/my-bookmarks-app/static/js/main.5f6bcd3a.chunk.js",
+    "main.js.map": "/my-bookmarks-app/static/js/main.5f6bcd3a.chunk.js.map",
     "runtime-main.js": "/my-bookmarks-app/static/js/runtime-main.4df07941.js",
     "runtime-main.js.map": "/my-bookmarks-app/static/js/runtime-main.4df07941.js.map",
-    "static/js/2.f7399f90.chunk.js": "/my-bookmarks-app/static/js/2.f7399f90.chunk.js",
-    "static/js/2.f7399f90.chunk.js.map": "/my-bookmarks-app/static/js/2.f7399f90.chunk.js.map",
+    "static/js/2.f47d93e6.chunk.js": "/my-bookmarks-app/static/js/2.f47d93e6.chunk.js",
+    "static/js/2.f47d93e6.chunk.js.map": "/my-bookmarks-app/static/js/2.f47d93e6.chunk.js.map",
     "static/js/3.979e700a.chunk.js": "/my-bookmarks-app/static/js/3.979e700a.chunk.js",
     "static/js/3.979e700a.chunk.js.map": "/my-bookmarks-app/static/js/3.979e700a.chunk.js.map",
     "static/js/4.3b5b0948.chunk.js": "/my-bookmarks-app/static/js/4.3b5b0948.chunk.js",
@@ -28,7 +28,7 @@
     "static/js/12.1755d414.chunk.js.map": "/my-bookmarks-app/static/js/12.1755d414.chunk.js.map",
     "index.html": "/my-bookmarks-app/index.html",
     "static/js/11.a94da338.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/11.a94da338.chunk.js.LICENSE.txt",
-    "static/js/2.f7399f90.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/2.f7399f90.chunk.js.LICENSE.txt",
+    "static/js/2.f47d93e6.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/2.f47d93e6.chunk.js.LICENSE.txt",
     "static/js/5.2af349eb.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/5.2af349eb.chunk.js.LICENSE.txt",
     "static/js/6.951770ce.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/6.951770ce.chunk.js.LICENSE.txt",
     "static/js/7.99d3f1bf.chunk.js.LICENSE.txt": "/my-bookmarks-app/static/js/7.99d3f1bf.chunk.js.LICENSE.txt",
@@ -36,7 +36,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.4df07941.js",
-    "static/js/2.f7399f90.chunk.js",
-    "static/js/main.6f5cfc1d.chunk.js"
+    "static/js/2.f47d93e6.chunk.js",
+    "static/js/main.5f6bcd3a.chunk.js"
   ]
 }
