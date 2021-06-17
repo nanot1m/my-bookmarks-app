@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { FileSystemHandle } from "browser-nativefs";
 import { matchSorter } from "match-sorter";
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { FaFileAlt, FaFileDownload } from "react-icons/fa";
 import { GoMarkGithub } from "react-icons/go";
 
@@ -23,7 +23,11 @@ import { BookmarkId, BookmarkType } from "./bookmark";
 import { CreateBookmarkButton } from "./BookmarkForm";
 import { BookmarkView } from "./BookmarkView";
 import { AppState } from "./storage";
-import { loadFromFile, saveToFile } from "./storage/file-system-storage";
+import {
+  loadFromFile,
+  saveFileHandle,
+  saveToFile,
+} from "./storage/file-system-storage";
 
 type AppAction =
   | { type: "NewBookmark"; payload: BookmarkType }
@@ -64,14 +68,16 @@ function appReducer(state: AppState, action: AppAction): AppState {
 
 function App({
   initialState,
+  initialFileHandle,
   onStateChange,
 }: {
   initialState: AppState;
+  initialFileHandle: FileSystemHandle | undefined;
   onStateChange(state: AppState): void;
 }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [filter, setFilterValue] = useState("");
-  const [fileHandle, setFileHandle] = useState<FileSystemHandle>();
+  const [fileHandle, setFileHandle] = useState(initialFileHandle);
   const [autoSaveIsEnabled, setAutoSaveEnabled] = useState(false);
 
   const toast = useToast();
@@ -113,6 +119,9 @@ function App({
     try {
       const file = await loadFromFile();
       setFileHandle(file.handle);
+      if (file.handle) {
+        saveFileHandle(file.handle);
+      }
       dispatch({ type: "SetState", payload: file.state });
     } catch (ex) {
       if (ex.code !== DOMException.ABORT_ERR) {

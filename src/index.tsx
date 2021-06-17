@@ -1,16 +1,28 @@
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
-import React, { StrictMode } from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom";
 
 import App from "./App";
 import { createBookmark } from "./bookmark";
 import reportWebVitals from "./reportWebVitals";
 import { APP_VERSION, createStorageManager, getInitialState } from "./storage";
+import { restoreFileHandle } from "./storage/file-system-storage";
 import { localStorageProvider } from "./storage/local-storage";
 
 const storageManager = createStorageManager(localStorageProvider);
 
-storageManager.getState().then((state) => {
+async function restoreAppState() {
+  const [fileHandle, state] = await Promise.all([
+    restoreFileHandle(),
+    storageManager.getState(),
+  ]);
+  return {
+    state,
+    fileHandle,
+  };
+}
+
+restoreAppState().then(({ state, fileHandle }) => {
   const customTheme = extendTheme({
     config: {
       useSystemColorMode: true,
@@ -21,7 +33,11 @@ storageManager.getState().then((state) => {
     <StrictMode>
       <ColorModeScript />
       <ChakraProvider theme={customTheme}>
-        <App initialState={state} onStateChange={storageManager.setState} />
+        <App
+          initialState={state}
+          initialFileHandle={fileHandle}
+          onStateChange={storageManager.setState}
+        />
       </ChakraProvider>
     </StrictMode>,
     document.getElementById("root")

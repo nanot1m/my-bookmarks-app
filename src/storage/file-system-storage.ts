@@ -1,6 +1,17 @@
 import { fileOpen, fileSave, FileSystemHandle } from "browser-nativefs";
+import { get as idbGet, set as idbSet } from "idb-keyval";
 
 import { AppState, upgradeState } from "./index";
+
+const IDB_FILE_HANDLE_KEY = "idb_file_handle_key";
+
+export async function saveFileHandle(handle: FileSystemHandle): Promise<void> {
+  await idbSet(IDB_FILE_HANDLE_KEY, handle);
+}
+
+export function restoreFileHandle(): Promise<FileSystemHandle | undefined> {
+  return idbGet(IDB_FILE_HANDLE_KEY);
+}
 
 export async function saveToFile(
   state: AppState,
