@@ -6,7 +6,6 @@ import {
   Container,
   Heading,
   HStack,
-  IconButton,
   Input,
   Link,
   Text,
@@ -16,12 +15,17 @@ import {
 import { FileSystemHandle } from "browser-nativefs";
 import { matchSorter } from "match-sorter";
 import { useEffect, useMemo, useReducer, useState } from "react";
-import { FaFileAlt, FaFileDownload } from "react-icons/fa";
+import {
+  AiFillFileAdd,
+  AiFillFileText,
+  AiOutlineDownload,
+} from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 
 import { BookmarkId, BookmarkType } from "./bookmark";
 import { CreateBookmarkButton } from "./BookmarkForm";
 import { BookmarkView } from "./BookmarkView";
+import { IconButton } from "./IconButton";
 import { AppState } from "./storage";
 import {
   loadFromFile,
@@ -33,7 +37,8 @@ type AppAction =
   | { type: "NewBookmark"; payload: BookmarkType }
   | { type: "UpdateBookmark"; payload: BookmarkType }
   | { type: "DeleteBookmark"; payload: BookmarkId }
-  | { type: "SetState"; payload: AppState };
+  | { type: "SetState"; payload: AppState }
+  | { type: "CreateNewFile" };
 
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
@@ -63,6 +68,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
     case "SetState":
       return action.payload;
+    case "CreateNewFile":
+      return {
+        ...state,
+        bookmarks: [],
+      };
   }
 }
 
@@ -158,6 +168,32 @@ function App({
     }
   }
 
+  async function handleNewFile() {
+    try {
+      const result = await saveToFile({ ...state, bookmarks: [] });
+      dispatch({ type: "CreateNewFile" });
+      setFileHandle(result.fileHandle);
+      saveFileHandle(result.fileHandle);
+      setAutoSaveEnabled(false);
+      toast({
+        title: "New file created",
+        description: `New file "${result.fileHandle.name}" created`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (ex) {
+      if (ex.code !== DOMException.ABORT_ERR) {
+        toast({
+          title: "Failed to create a new file",
+          description: ex.message,
+          status: "error",
+          isClosable: true,
+        });
+      }
+    }
+  }
+
   return (
     <Container py={8}>
       <Box
@@ -170,21 +206,22 @@ function App({
         <Heading as="h1">My bookmarks.</Heading>
         <HStack>
           <IconButton
+            aria-label="New file"
+            title="New file"
+            icon={<Icon as={AiFillFileAdd} />}
+            onClick={handleNewFile}
+          />
+          <IconButton
             aria-label="Open file"
             title="Open file"
-            icon={<Icon as={FaFileAlt} />}
+            icon={<Icon as={AiFillFileText} />}
             onClick={handleFileOpen}
           />
           <IconButton
             aria-label="Save to file"
             title="Save to file"
-            icon={<Icon as={FaFileDownload} />}
+            icon={<Icon as={AiOutlineDownload} />}
             onClick={handleFileSave}
-          />
-          <CreateBookmarkButton
-            onBookmarkCreate={(bookmark) => {
-              dispatch({ type: "NewBookmark", payload: bookmark });
-            }}
           />
         </HStack>
       </Box>
@@ -201,13 +238,21 @@ function App({
           </Box>
         )}
       </Collapse>
-      <Input
-        placeholder="Search"
-        value={filter}
-        onChange={(e) => setFilterValue(e.target.value)}
-        mb={8}
-        mt={8}
-      />
+      <HStack>
+        <Input
+          placeholder="Search"
+          value={filter}
+          onChange={(e) => setFilterValue(e.target.value)}
+          mb={8}
+          mt={8}
+        />
+
+        <CreateBookmarkButton
+          onBookmarkCreate={(bookmark) => {
+            dispatch({ type: "NewBookmark", payload: bookmark });
+          }}
+        />
+      </HStack>
       {sortedBookmarks.length === 0 && (
         <Box textAlign="center" color="gray.500">
           No bookmarks yet. Let's add the first bookmark!

@@ -1,7 +1,6 @@
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
-  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -14,10 +13,11 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 import { BookmarkType, createBookmark, updateBookmark } from "./bookmark";
 import { createForm } from "./form";
+import { IconButton } from "./IconButton";
 
 type CreateBookmarkFormPayload = {
   name: string;
@@ -137,7 +137,8 @@ export function CreateBookmarkButton({
   return (
     <>
       <IconButton
-        aria-label="New bookmakr"
+        aria-label="Add bookmark"
+        title="Add bookmark"
         icon={<AddIcon />}
         onClick={onOpen}
       />
